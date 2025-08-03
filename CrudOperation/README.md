@@ -5,28 +5,31 @@ A Spring Boot web application for managing a welding and fabrication workshop's 
 ## 🎯 Features
 
 ### For Customers (Public)
-- **Home Page**: Browse available products and services
+- **Home Page**: Browse available products and services with images
 - **Get Quote**: Select services and submit contact information
 - **Responsive Design**: Mobile-friendly interface
 
 ### For Administrators
 - **Product Management**: Add, edit, delete, and view products/services
-- **Contact Management**: View and manage customer inquiries
+- **Image Upload**: Upload product images directly from device or use URLs
+- **Contact Management**: View detailed contact submissions with selected products
 - **Admin Dashboard**: Easy access to all management functions
 
 ## 🛠 Technology Stack
 
 - **Backend**: Spring Boot 3.5.4, Java 21
-- **Database**: H2 (in-memory for development)
+- **Database**: MySQL 8.0
 - **Frontend**: Thymeleaf, Bootstrap 5, Font Awesome
 - **Build Tool**: Maven
 - **Dependencies**: Spring Data JPA, Spring Web, Lombok
+- **File Upload**: Spring Multipart support with local storage
 
 ## 🚀 Getting Started
 
 ### Prerequisites
 - Java 21 or higher
-- Maven 3.6 or higher
+- MySQL 8.0 or higher
+- Maven 3.6 or higher (optional - can use IDE or direct Java execution)
 
 ### Installation & Running
 
@@ -36,18 +39,34 @@ A Spring Boot web application for managing a welding and fabrication workshop's 
    cd CrudOperation
    ```
 
-2. **Run the application**
+2. **Database Setup**
+   - Create MySQL database: `welder_fabrication`
+   - Update `application.properties` with your MySQL credentials
+   - Run the SQL script: `database_setup.sql`
+
+3. **Run the application**
+   
+   **Option 1: Using Maven**
    ```bash
    mvn spring-boot:run
    ```
+   
+   **Option 2: Using IDE**
+   - Open in IntelliJ IDEA or Eclipse
+   - Run `CrudOperationApplication.java`
+   
+   **Option 3: Direct Java execution**
+   ```bash
+   # First build the JAR
+   mvn clean package
+   # Then run
+   java -jar target/CrudOperation-0.0.1-SNAPSHOT.jar
+   ```
 
-3. **Access the application**
+4. **Access the application**
    - Main website: http://localhost:8080
    - Admin panel: http://localhost:8080/admin/products
-   - H2 Database Console: http://localhost:8080/h2-console
-     - JDBC URL: `jdbc:h2:mem:testdb`
-     - Username: `sa`
-     - Password: `password`
+   - Contact submissions: http://localhost:8080/contact/admin/contacts
 
 ## 📋 Application Structure
 
@@ -58,27 +77,44 @@ src/main/java/com/example/CrudOperation/
 │   └── ContactController.java    # Contact form handling
 ├── Service/
 │   ├── ProductService.java       # Product business logic
-│   └── ContactService.java       # Contact business logic
+│   ├── ContactService.java       # Contact business logic
+│   └── FileUploadService.java    # File upload handling
 ├── Repostaries/
 │   ├── ProductRepo.java          # Product data access
 │   └── ContactRepo.java          # Contact data access
 ├── Model/
 │   ├── Product.java              # Product entity
 │   └── Contact.java              # Contact entity
-├── DataInitializer.java          # Sample data population
-└── CrudOperationApplication.java # Main application class
+└── Config/
+    └── WebConfig.java            # Static resource configuration
 ```
 
-## 🗄 Database Schema
+## 🖼️ File Upload Features
+
+### Product Images
+- **Direct Upload**: Admins can upload image files (JPG, PNG, GIF, WebP) directly from their device
+- **URL Option**: Alternative option to use external image URLs
+- **Automatic Storage**: Uploaded files are stored in the `uploads/` directory
+- **Unique Naming**: Files are renamed with UUID to prevent conflicts
+- **Preview**: Real-time image preview in admin forms
+- **Cleanup**: Old images are automatically deleted when products are updated/deleted
+
+### File Management
+- **Max File Size**: 10MB per file
+- **Supported Formats**: All common image formats
+- **Storage Location**: `uploads/` directory in project root
+- **URL Access**: Files accessible via `/uploads/filename`
+
+## 📊 Database Schema
 
 ### Product Table
 - `id` (Primary Key)
 - `name` (Product/Service name)
 - `description` (Detailed description)
-- `price` (Price in USD, nullable for "price on request")
-- `category` (Welding, Gates, Grills, Fabrication, Repair, Custom)
-- `imageUrl` (Optional image URL)
-- `available` (Boolean availability status)
+- `price` (Price in Rupees)
+- `category` (Welding, Gates, Grills, etc.)
+- `imageUrl` (Image file path or URL)
+- `available` (Boolean for availability)
 
 ### Contact Table
 - `id` (Primary Key)
@@ -87,102 +123,51 @@ src/main/java/com/example/CrudOperation/
 - `phone` (Customer phone)
 - `message` (Project details)
 - `selectedProducts` (Comma-separated product IDs)
-- `submittedAt` (Timestamp)
-- `processed` (Boolean processing status)
+- `submittedAt` (Submission timestamp)
+- `processed` (Admin processing status)
 
-## 🎨 User Interface
+## 🎨 UI Features
 
 ### Public Pages
-1. **Home Page** (`/`)
-   - Hero section with call-to-action
-   - Product/service cards with categories
-   - Features section highlighting workshop capabilities
-
-2. **Quote Page** (`/cart`)
-   - Product selection with checkboxes
-   - Contact form (name, email, phone, message)
-   - Real-time selected products display
+- **Home Page**: Hero section with professional design, product cards with images
+- **Cart/Quote Page**: Interactive product selection with real-time updates
+- **Responsive Design**: Works on all device sizes
 
 ### Admin Pages
-1. **Products Management** (`/admin/products`)
-   - Table view of all products
-   - Add, edit, delete functionality
-   - Link to contact submissions
-
-2. **Add Product** (`/admin/products/add`)
-   - Form for adding new products
-   - Category dropdown
-   - Price and availability options
-
-3. **Edit Product** (`/admin/products/edit/{id}`)
-   - Pre-populated form for editing
-   - Same fields as add product
-
-4. **Contact Submissions** (`/contact/admin/contacts`)
-   - Table view of all submissions
-   - Mark as processed functionality
-   - View detailed contact information
+- **Product Management**: Full CRUD with image upload support
+- **Contact Submissions**: Detailed view with selected products information
+- **Status Management**: Mark contacts as processed
+- **Image Preview**: Real-time preview for uploaded images
 
 ## 🔧 Configuration
 
 ### Application Properties
-- **Database**: H2 in-memory database
-- **Port**: 8080
-- **JPA**: Auto-create tables, show SQL
-- **Thymeleaf**: Disabled cache for development
+```properties
+# Database
+spring.datasource.url=jdbc:mysql://localhost:3306/welder_fabrication
+spring.datasource.username=root
+spring.datasource.password=root
 
-### Sample Data
-The application automatically populates the database with sample products on first run:
-- Welding services (Steel, Aluminum)
-- Gates (Security, Driveway)
-- Grills (Security, Decorative)
-- Fabrication (Railings, Furniture)
-- Repair services (Equipment, Structural)
-- Custom work (Metal Art, Specialty)
+# File Upload
+spring.servlet.multipart.enabled=true
+spring.servlet.multipart.max-file-size=10MB
+app.upload.dir=uploads
+```
 
-## 📱 Features in Detail
+## 🚨 Troubleshooting
 
-### Product Management
-- **CRUD Operations**: Full create, read, update, delete functionality
-- **Categories**: Organized by service type
-- **Pricing**: Support for fixed prices and "price on request"
-- **Availability**: Toggle product availability
+### Common Issues
+1. **Maven not found**: Use IDE or direct Java execution
+2. **Database connection**: Ensure MySQL is running and credentials are correct
+3. **File upload errors**: Check `uploads/` directory permissions
+4. **Image not displaying**: Verify file exists and URL is correct
 
-### Contact Form
-- **Product Selection**: Checkbox-based product selection
-- **Contact Information**: Name, email, phone, project details
-- **Form Validation**: Required field validation
-- **Success Feedback**: User-friendly success messages
+### File Upload Issues
+- Ensure `uploads/` directory has write permissions
+- Check file size (max 10MB)
+- Verify image format is supported
+- Clear browser cache if images don't update
 
-### Admin Features
-- **Contact Processing**: Mark inquiries as processed
-- **Data Management**: View and manage all submissions
-- **Product Catalog**: Complete product lifecycle management
+## 📝 License
 
-## 🎯 Business Requirements Met
-
-✅ **Product CRUD**: Full product management capabilities  
-✅ **Home Page**: Displays available products/services  
-✅ **Cart/Quote Page**: Product selection and contact form  
-✅ **Contact Storage**: All submissions saved to database  
-✅ **Admin Interface**: Complete management dashboard  
-✅ **Responsive Design**: Mobile-friendly interface  
-✅ **Simple Setup**: H2 database for easy deployment  
-
-## 🔮 Future Enhancements
-
-- User authentication and authorization
-- Email notifications for new contacts
-- Product image upload functionality
-- Advanced search and filtering
-- Quote generation and PDF export
-- Payment integration
-- Customer account management
-
-## 📞 Support
-
-For questions or issues, please contact the development team.
-
----
-
-**Built with ❤️ using Spring Boot** 
+This project is for educational and business use. 

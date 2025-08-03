@@ -1,13 +1,16 @@
 package com.example.CrudOperation.Controller;
 
 import com.example.CrudOperation.Model.Contact;
+import com.example.CrudOperation.Model.Product;
 import com.example.CrudOperation.Service.ContactService;
+import com.example.CrudOperation.Service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -16,6 +19,9 @@ public class ContactController {
 
     @Autowired
     private ContactService contactService;
+
+    @Autowired
+    private ProductService productService;
 
     // Submit contact form
     @PostMapping("/submit")
@@ -40,7 +46,23 @@ public class ContactController {
         if (contact == null) {
             return "redirect:/contact/admin/contacts";
         }
+
+        // Fetch selected products details
+        List<Product> selectedProductsDetails = new ArrayList<>();
+        if (contact.getSelectedProducts() != null && !contact.getSelectedProducts().trim().isEmpty()) {
+            String[] productIds = contact.getSelectedProducts().split(",");
+            for (String productId : productIds) {
+                try {
+                    Long idLong = Long.parseLong(productId.trim());
+                    productService.getProductById(idLong).ifPresent(selectedProductsDetails::add);
+                } catch (NumberFormatException e) {
+                    // Skip invalid product IDs
+                }
+            }
+        }
+
         model.addAttribute("contact", contact);
+        model.addAttribute("selectedProductsDetails", selectedProductsDetails);
         return "admin/contact-detail";
     }
 
