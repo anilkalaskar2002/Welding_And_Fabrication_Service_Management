@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="https://www.thymeleaf.org/ ">
+<head>>
+  <title>Employee</title>
+</head>
+<body>
+<div>
+
+  <h3>Employee List</h3>
+  <table>
+    <thead>
+    <tr>
+      <th>Name</th>
+      <th>Email</th>
+    </tr>
+    </thead>
+  <tr >
+<!--th:each="emp:${emp}">&ndash;&gt;-->
+<!--      <td th:text="${emp.name}"></td>-->
+      <td th:text="${emp}"></td>
+
+ </tr>
+  </table>
+</div>
+</body>
+</html>
+

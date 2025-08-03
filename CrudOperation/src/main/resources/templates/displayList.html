@@ -1,0 +1,13 @@
+!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="https://www.thymeleaf.org/ ">
+<head>
+    <title>Displaying a List</title>
+</head>
+<body>
+<h1>My Favorite Fruits:</h1>
+<ul>
+    <li th:each="fruit : ${fruitList}" th:text="${fruit}"></li>
+</ul>
+</body>
+</html>

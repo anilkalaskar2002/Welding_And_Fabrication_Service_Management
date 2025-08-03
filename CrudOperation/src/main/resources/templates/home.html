@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org/">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welder & Fabrication Workshop</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .hero-section {
+            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://images.unsplash.com/photo-1581094794329-c8112a89af12?ixlib=rb-4.0.3');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            padding: 120px 0;
+            margin-bottom: 50px;
+        }
+        .navbar-brand {
+            font-weight: bold;
+            color: #dc3545 !important;
+        }
+        .product-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            height: 100%;
+        }
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        }
+        .product-image {
+            height: 200px;
+            object-fit: cover;
+            width: 100%;
+        }
+        .category-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+        }
+        .features-section {
+            background-color: #f8f9fa;
+            padding: 60px 0;
+            margin: 50px 0;
+        }
+        .feature-icon {
+            font-size: 3rem;
+            color: #dc3545;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                <i class="fas fa-fire"></i> Welder & Fabrication
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/cart">Get Quote</a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/admin/products">Admin</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-section text-center">
+        <div class="container">
+            <h1 class="display-3 fw-bold mb-4">Professional Welding & Fabrication Services</h1>
+            <p class="lead mb-4">Quality craftsmanship for all your metalworking needs. From custom gates to industrial repairs, we deliver excellence.</p>
+            <div class="d-flex justify-content-center gap-3">
+                <a href="/cart" class="btn btn-danger btn-lg">
+                    <i class="fas fa-shopping-cart"></i> Get a Quote Today
+                </a>
+                <a href="#services" class="btn btn-outline-light btn-lg">
+                    <i class="fas fa-tools"></i> View Services
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section id="services" class="py-5">
+        <div class="container">
+            <div class="row mb-5">
+                <div class="col-12 text-center">
+                    <h2 class="fw-bold mb-3">Our Services</h2>
+                    <p class="text-muted lead">Browse our comprehensive range of welding and fabrication services</p>
+                </div>
+            </div>
+            
+            <div class="row g-4" th:if="${products != null and !products.empty}">
+                <div class="col-md-6 col-lg-4" th:each="product : ${products}">
+                    <div class="card product-card h-100">
+                        <div th:if="${product.imageUrl != null and product.imageUrl != ''}">
+                            <img th:src="${product.imageUrl}" class="card-img-top product-image" alt="Product Image">
+                        </div>
+                        <div th:unless="${product.imageUrl != null and product.imageUrl != ''}">
+                            <div class="card-img-top product-image bg-light d-flex align-items-center justify-content-center">
+                                <i class="fas fa-image text-muted" style="font-size: 3rem;"></i>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <span class="badge bg-primary category-badge" th:text="${product.category}">Category</span>
+                            <h5 class="card-title" th:text="${product.name}">Product Name</h5>
+                            <p class="card-text" th:text="${product.description}">Product description</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="text-danger fw-bold" th:if="${product.price != null}">
+                                    ₹<span th:text="${#numbers.formatDecimal(product.price, 1, 2)}">0.00</span>
+                                </span>
+                                <span class="text-muted" th:unless="${product.price != null}">Price on request</span>
+                                <a href="/cart" class="btn btn-outline-primary btn-sm">
+                                    <i class="fas fa-plus"></i> Add to Quote
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row" th:if="${products == null or products.empty}">
+                <div class="col-12 text-center">
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle"></i> No products available at the moment. Please check back later.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features-section">
+        <div class="container">
+            <div class="row text-center">
+                <div class="col-md-4 mb-4">
+                    <div class="feature-icon">
+                        <i class="fas fa-tools"></i>
+                    </div>
+                    <h4>Quality Craftsmanship</h4>
+                    <p class="text-muted">Expert welding and fabrication with attention to detail and precision</p>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="feature-icon">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <h4>Fast Turnaround</h4>
+                    <p class="text-muted">Quick and efficient service to meet your deadlines and requirements</p>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="feature-icon">
+                        <i class="fas fa-medal"></i>
+                    </div>
+                    <h4>Reliable Service</h4>
+                    <p class="text-muted">Trusted by customers for years of quality work and satisfaction</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white py-4">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <h5>Welder & Fabrication Workshop</h5>
+                    <p>Quality welding and fabrication services for all your needs.</p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <h5>Contact Info</h5>
+                    <p>
+                        <i class="fas fa-phone"></i> +91 98765 43210<br>
+                        <i class="fas fa-envelope"></i> info@welderfabrication.com<br>
+                        <i class="fas fa-map-marker-alt"></i> 123 Workshop St, City, State
+                    </p>
+                </div>
+            </div>
+            <hr>
+            <div class="text-center">
+                <p>&copy; 2024 Welder & Fabrication Workshop. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html> 
