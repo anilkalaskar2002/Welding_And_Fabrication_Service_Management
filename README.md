@@ -154,8 +154,13 @@ src/main/java/com/example/CrudOperation/
 ```properties
 # Database
 spring.datasource.url=jdbc:mysql://localhost:3306/welder_fabrication
+<<<<<<< HEAD
 spring.datasource.username=root
 spring.datasource.password=root
+=======
+spring.datasource.username=
+spring.datasource.password=
+>>>>>>> cc3d822a5f5583006994759f9ca0331a6666b423
 
 # File Upload
 spring.servlet.multipart.enabled=true
@@ -185,4 +190,8 @@ app.upload.dir=uploads
 
 ## 📝 License
 
+<<<<<<< HEAD
 This project is for educational and business use. 
+=======
+This project is for educational and business use. 
+>>>>>>> cc3d822a5f5583006994759f9ca0331a6666b423
