@@ -1,0 +1,22 @@
+# Maven/Java
+/target/
+*.class
+*.log
+
+# IDEs
+/.idea/
+/.vscode/
+*.iml
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Database data (DO NOT COMMIT!)
+/mysql-data/
+/mysql_data/
+/var/lib/mysql/
+/uploads/
+
+# Environment files
+.env
