@@ -1,0 +1,387 @@
+<html lang="en" xmlns:th="https://www.thymeleaf.org/">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Get Quote - Welder & Fabrication Workshop</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .product-item {
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            transition: all 0.3s ease;
+        }
+        .product-item:hover {
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .selected-products {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        .product-image {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 5px;
+            margin-right: 15px;
+        }
+        .product-image-placeholder {
+            width: 80px;
+            height: 80px;
+            background-color: #f8f9fa;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #6c757d;
+            margin-right: 15px;
+        }
+
+        /* Google Translate Widget Styling - Standalone */
+        .goog-te-banner-frame {
+            display: none !important;
+        }
+
+        .goog-te-banner-frame.skiptranslate {
+            display: none !important;
+        }
+
+        .goog-te-gadget {
+            color: #333 !important;
+        }
+
+        .goog-te-gadget .goog-te-combo {
+            background-color: white;
+            color: #333;
+            border: 2px solid #dc3545;
+            border-radius: 6px;
+            padding: 8px 12px;
+            font-size: 14px;
+            min-width: 150px;
+            font-weight: 500;
+        }
+
+        .goog-te-gadget .goog-te-combo option {
+            background-color: white;
+            color: #333;
+        }
+
+        .goog-te-gadget .goog-te-combo:focus {
+            outline: none;
+            border-color: #dc3545;
+            box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
+        }
+
+        /* Remove the top margin that Google Translate adds */
+        body {
+            top: 0px !important;
+            position: static !important;
+        }
+
+        /* Hide any Google Translate elements that might cause overlap */
+        .goog-te-banner-frame,
+        .goog-te-banner-frame.skiptranslate,
+        .goog-te-banner-frame.skiptranslate.goog-te-banner-frame {
+            display: none !important;
+            visibility: hidden !important;
+            height: 0 !important;
+            overflow: hidden !important;
+        }
+
+        /* Language switcher container */
+        .language-switcher {
+            background-color: #f8f9fa;
+            padding: 10px 0;
+            border-bottom: 1px solid #dee2e6;
+            text-align: center;
+        }
+
+        .language-switcher .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .language-label {
+            font-weight: 400;
+            color: #495057;
+            margin: 0;
+        }
+
+        /* Additional fixes for mobile */
+        @media (max-width: 768px) {
+            .goog-te-gadget .goog-te-combo {
+                font-size: 10px;
+                min-width: 120px;
+            }
+            .language-switcher .container {
+                gap: 5px;
+            }
+        }
+
+
+    </style>
+    <!-- Google Translate Script -->
+    <script type="text/javascript">
+        function googleTranslateElementInit() {
+            new google.translate.TranslateElement({
+                pageLanguage: 'en',
+                includedLanguages: 'en,hi,mr,gu,ta,te,kn,ml,pa,bn,ur,ar,zh-CN,ja,ko,fr,de,es,pt,it,ru',
+                layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
+                autoDisplay: false
+            }, 'google_translate_element');
+        }
+    </script>
+    <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+</head>
+<body>
+    <!-- Language Switcher - Standalone -->
+    <div class="language-switcher">
+        <div class="container">
+            <p class="language-label mb-0">
+                <i class="fas fa-globe"></i> Choose Language:
+            </p>
+            <div id="google_translate_element"></div>
+        </div>
+    </div>
+
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="/"><i class="fas fa-fire"></i> Welder & Fabrication</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="/cart">Get Quote</a></li>
+                </ul>
+                <ul class="navbar-nav">
+                    <li class="nav-item"><a class="nav-link" href="/admin/login">Admin</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div th:if="${message}" class="alert alert-success alert-dismissible fade show m-3">
+        <span th:text="${message}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+
+    <div class="container py-4">
+        <div class="row justify-content-center">
+            <div class="col-12">
+                <div class="text-center mb-4">
+                    <h1><i class="fas fa-shopping-cart"></i> Get Your Quote</h1>
+                    <p class="lead">Select the services you need and provide your contact information</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Search Section -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <form method="get" action="/cart" class="row g-3">
+                            <div class="col-md-4">
+                                <label for="search" class="form-label">Search Services</label>
+                                <input type="text" class="form-control" id="search" name="search" 
+                                       th:value="${searchTerm}" placeholder="Search by name or description...">
+                            </div>
+                            <div class="col-md-3">
+                                <label for="category" class="form-label">Category</label>
+                                <select class="form-select" id="category" name="category">
+                                    <option value="">All Categories</option>
+                                    <option th:each="cat : ${categories}" 
+                                            th:value="${cat}" 
+                                            th:text="${cat}"
+                                            th:selected="${cat == selectedCategory}">Category</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">&nbsp;</label>
+                                <div class="d-grid">
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="fas fa-search"></i> Search
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <label class="form-label">&nbsp;</label>
+                                <div class="d-grid">
+                                    <a href="/cart" class="btn btn-outline-secondary">
+                                        <i class="fas fa-times"></i> Clear
+                                    </a>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Search Results Info -->
+        <div class="row mb-3" th:if="${searchTerm != null and searchTerm != '' or selectedCategory != null and selectedCategory != ''}">
+            <div class="col-12">
+                <div class="alert alert-info">
+                    <i class="fas fa-info-circle"></i>
+                    <span th:if="${searchTerm != null and searchTerm != '' and selectedCategory != null and selectedCategory != ''}">
+                        Showing results for "<span th:text="${searchTerm}"></span>" in <span th:text="${selectedCategory}"></span> category
+                    </span>
+                    <span th:if="${searchTerm != null and searchTerm != '' and (selectedCategory == null or selectedCategory == '')}">
+                        Showing results for "<span th:text="${searchTerm}"></span>"
+                    </span>
+                    <span th:if="${(searchTerm == null or searchTerm == '') and selectedCategory != null and selectedCategory != ''}">
+                        Showing services in <span th:text="${selectedCategory}"></span> category
+                    </span>
+                    <span class="ms-2">(<span th:text="${products.size()}"></span> services found)</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0"><i class="fas fa-list"></i> Available Services</h5>
+                    </div>
+                    <div class="card-body">
+                        <div th:if="${products != null and !products.empty}">
+                            <div class="row">
+                                <div class="col-md-6 mb-3" th:each="product : ${products}">
+                                    <div class="product-item">
+                                        <div class="d-flex align-items-start">
+                                            <img th:if="${product.imageUrl != null and product.imageUrl != ''}" 
+                                                 th:src="${product.imageUrl}" class="product-image" alt="Product Image">
+                                            <div th:unless="${product.imageUrl != null and product.imageUrl != ''}" 
+                                                 class="product-image-placeholder">
+                                                <i class="fas fa-image"></i>
+                                            </div>
+                                            <div class="flex-grow-1">
+                                                <div class="form-check">
+                                                    <input class="form-check-input product-checkbox" type="checkbox" 
+                                                           th:value="${product.id}" th:id="'product-' + ${product.id}">
+                                                    <label class="form-check-label" th:for="'product-' + ${product.id}">
+                                                        <h6 class="mb-1" th:text="${product.name}">Product Name</h6>
+                                                        <p class="text-muted small mb-1" th:text="${product.description}">Description</p>
+                                                        <span class="badge bg-primary" th:text="${product.category}">Category</span>
+                                                        <div class="mt-2">
+                                                            <span th:if="${product.price != null}" class="text-success fw-bold">
+                                                                ₹<span th:text="${#numbers.formatDecimal(product.price, 1, 2)}">0.00</span>
+                                                            </span>
+                                                            <span th:unless="${product.price != null}" class="text-muted">Price on request</span>
+                                                        </div>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div th:if="${products == null or products.empty}" class="text-center">
+                            <div class="alert alert-info">
+                                <i class="fas fa-info-circle"></i> No products available at the moment.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0"><i class="fas fa-user"></i> Contact Information</h5>
+                    </div>
+                    <div class="card-body">
+                        <form th:action="@{/contact/submit}" method="post">
+                            <div class="mb-3">
+                                <label for="name" class="form-label">Full Name *</label>
+                                <input type="text" class="form-control" id="name" name="name" required>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="email" class="form-label">Email Address *</label>
+                                <input type="email" class="form-control" id="email" name="email" required>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="phone" class="form-label">Phone Number *</label>
+                                <input type="tel" class="form-control" id="phone" name="phone" required>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="message" class="form-label">Project Details</label>
+                                <textarea class="form-control" id="message" name="message" rows="4" 
+                                          placeholder="Please describe your project requirements..."></textarea>
+                            </div>
+                            
+                            <input type="hidden" id="selectedProducts" name="selectedProducts">
+                            
+                            <button type="submit" class="btn btn-primary w-100">
+                                <i class="fas fa-paper-plane"></i> Submit Quote Request
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="card mt-3">
+                    <div class="card-header">
+                        <h6 class="mb-0"><i class="fas fa-shopping-cart"></i> Selected Services</h6>
+                    </div>
+                    <div class="card-body">
+                        <div id="selectedProductsList" class="selected-products">
+                            <p class="text-muted small">No services selected yet</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const checkboxes = document.querySelectorAll('.product-checkbox');
+            const selectedProductsInput = document.getElementById('selectedProducts');
+            const selectedProductsList = document.getElementById('selectedProductsList');
+            
+            function updateSelectedProducts() {
+                const selectedProducts = [];
+                const selectedLabels = [];
+                
+                checkboxes.forEach(checkbox => {
+                    if (checkbox.checked) {
+                        selectedProducts.push(checkbox.value);
+                        const label = checkbox.nextElementSibling;
+                        const productName = label.querySelector('h6').textContent;
+                        selectedLabels.push(productName);
+                    }
+                });
+                
+                selectedProductsInput.value = selectedProducts.join(',');
+                
+                if (selectedLabels.length > 0) {
+                    selectedProductsList.innerHTML = selectedLabels.map(name => 
+                        `<div class="d-flex justify-content-between align-items-center mb-2">
+                            <span class="small">${name}</span>
+                            <i class="fas fa-check text-success"></i>
+                        </div>`
+                    ).join('');
+                } else {
+                    selectedProductsList.innerHTML = '<p class="text-muted small">No services selected yet</p>';
+                }
+            }
+            
+            checkboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', updateSelectedProducts);
+            });
+        });
+    </script>
+</body>
+</html> 
