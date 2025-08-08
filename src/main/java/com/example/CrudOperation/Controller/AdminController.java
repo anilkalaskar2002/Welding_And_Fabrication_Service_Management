@@ -30,7 +30,7 @@ public class AdminController {
             RedirectAttributes redirectAttributes) {
 
         if (adminService.authenticate(username, password)) {
-            session.setAttribute("adminLoggedIn", true);
+//            session.setAttribute("adminLoggedIn", true);
             session.setAttribute("adminUsername", username);
             redirectAttributes.addFlashAttribute("message", "Welcome back, " + username + "!");
             return "redirect:/admin/products";
@@ -43,7 +43,7 @@ public class AdminController {
     // Handle logout
     @GetMapping("/logout")
     public String logout(HttpSession session, RedirectAttributes redirectAttributes) {
-        session.invalidate();
+//        session.invalidate();
         redirectAttributes.addFlashAttribute("message", "You have been logged out successfully");
         return "redirect:/admin/login";
     }
